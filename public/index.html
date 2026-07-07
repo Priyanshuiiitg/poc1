@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euro-Office Black Box Viewer</title>
+    <!-- Include PDF.js from unpkg for offline readiness (in production, bundle this locally) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <style>
+        body { 
+            font-family: -apple-system, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            background-color: #e5e7eb;
+        }
+        header { 
+            padding: 1.5rem; 
+            background-color: #1f2937; 
+            color: white; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin: 0;
+            font-weight: 500;
+        }
+        input[type="file"] { display: none; }
+        .custom-file-upload { 
+            border: none; 
+            display: inline-block; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            background: #3b82f6; 
+            color: white; 
+            border-radius: 6px; 
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .custom-file-upload:hover {
+            background: #2563eb;
+        }
+        #viewer-container { 
+            flex: 1; 
+            overflow: auto; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 2rem; 
+        }
+        canvas { 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); 
+            background: white; 
+            margin-bottom: 2rem; 
+        }
+        #loader { 
+            display: none; 
+            color: #9ca3af; 
+            font-weight: bold; 
+            margin-right: 15px;
+        }
+        .controls { 
+            display: flex; 
+            align-items: center; 
+        }
+        .welcome {
+            color: #6b7280;
+            margin-top: 10vh;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Euro-Office Edge Renderer</h2>
+        <div class="controls">
+            <span id="loader">Converting document natively...</span>
+            <label class="custom-file-upload">
+                <input type="file" id="documentUpload" accept=".docx,.pptx,.xlsx,.pdf" />
+                Select Office File
+            </label>
+        </div>
+    </header>
+
+    <div id="viewer-container">
+        <div class="welcome" id="welcome-msg">
+            <h2>Ready to render locally.</h2>
+            <p>Upload a .docx, .xlsx, or .pptx file.</p>
+        </div>
+    </div>
+
+    <script>
+        // Set worker path for PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
+        const fileInput = document.getElementById('documentUpload');
+        const loader = document.getElementById('loader');
+        const viewerContainer = document.getElementById('viewer-container');
+        const welcomeMsg = document.getElementById('welcome-msg');
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            viewerContainer.innerHTML = ''; // Clear previous renders
+            if(welcomeMsg) welcomeMsg.style.display = 'none';
+
+            // If it's already a PDF, just render it directly (bypassing the black box converter)
+            if (file.name.toLowerCase().endsWith('.pdf')) {
+                const url = URL.createObjectURL(file);
+                renderPDF(url);
+                return;
+            }
+
+            // Otherwise, send to our x2t backend converter
+            const formData = new FormData();
+            formData.append('document', file);
+
+            loader.style.display = 'inline-block';
+            try {
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Conversion failed on the server.');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                renderPDF(url);
+            } catch (err) {
+                alert('Error converting document: ' + err.message);
+                console.error(err);
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        async function renderPDF(url) {
+            try {
+                const loadingTask = pdfjsLib.getDocument(url);
+                const pdf = await loadingTask.promise;
+                
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    
+                    const scale = 1.5;
+                    const viewport = page.getViewport({scale: scale});
+
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    viewerContainer.appendChild(canvas);
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    await page.render(renderContext).promise;
+                }
+            } catch(e) {
+                console.error("PDF Rendering Error:", e);
+                alert("Failed to render the output PDF.");
+            }
+        }
+    </script>
+</body>
+</html>
