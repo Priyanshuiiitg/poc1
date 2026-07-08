@@ -47,8 +47,8 @@ app.post('/api/convert', upload.single('document'), (req, res) => {
     const internalOutput = isWindows ? `/app/uploads/${path.basename(outputPdfPath)}` : outputPdfPath;
     
     // For local Windows testing, we use the container's built-in fonts directly
-    // For native Edge Linux, we use the extracted fonts
-    const internalFontDir = isWindows ? `/var/www/euro-office/documentserver/core-fonts` : path.resolve(appRoot, 'x2t-engine/fonts/core-fonts');
+    // For native Edge Linux, we use the extracted fonts in the preserved tree
+    const internalFontDir = isWindows ? `/var/www/euro-office/documentserver/core-fonts` : path.resolve(appRoot, 'x2t-engine/core-fonts');
 
     // Generate the required XML configuration for x2t
     const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
@@ -71,7 +71,7 @@ app.post('/api/convert', upload.single('document'), (req, res) => {
         command = `docker exec euro-office-daemon /bin/bash -c "export LD_LIBRARY_PATH=/var/www/euro-office/documentserver/server/FileConverter/bin:$LD_LIBRARY_PATH && /var/www/euro-office/documentserver/server/FileConverter/bin/x2t /app/uploads/${taskId}.xml"`;
     } else {
         // Run natively on the Linux edge device without Docker
-        const engineBinPath = path.resolve(appRoot, 'x2t-engine/bin');
+        const engineBinPath = path.resolve(appRoot, 'x2t-engine/server/FileConverter/bin');
         command = `export LD_LIBRARY_PATH=${engineBinPath}:$LD_LIBRARY_PATH && ${engineBinPath}/x2t ${xmlConfigPath}`;
     }
 
