@@ -1,3 +1,41 @@
+
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ unzip eurooffice-edge.zip -d extracted_edge_files
+
+
+
+icuuc.so.74.2
+  extracted_edge_files/x2t-engine/server/FileConverter/bin/libicuuc.so.74 -> libicuuc.so.74.2
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras$ cd extracted_edge_files/
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ bash run-fonts.sh
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ npm install
+
+> eurooffice-blackbox@1.0.0 postinstall
+> node setup-fonts.js
+
+Generating native Linux font cache for the Edge environment...
+Running: "/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/server/tools/allfontsgen" --input="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/core-fonts" --allfonts-web="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/sdkjs/common/AllFonts.js" --allfonts="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/server/FileConverter/bin/AllFonts.js" --images="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/sdkjs/common/Images" --selection="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/server/FileConverter/bin/font_selection.bin" --output-web="/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/x2t-engine/fonts" --use-system="false" --use-system-user-fonts="false"
+Font generation completely successfully!
+
+added 85 packages, and audited 86 packages in 10s
+
+29 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ npm start
+
+> eurooffice-blackbox@1.0.0 start
+> node server.js
+
+Euro-Office Black Box Converter listening on port 3000
+Mode: Linux Native (Edge)
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ bash test-native.sh Software\ Development\ Challenge\ -\ Priyanshu\ Shukla.pptx
+Testing native Linux execution (NO Docker)...
+Done! Check if /mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files/Software Development Challenge - Priyanshu Shukla.pdf was created.
+priyanshu@LAPTOP-06HKVITU:/mnt/d/ComfyUI_windows_portable/ComfyUI/models/loras/extracted_edge_files$ unzip eurooffice-edge.zip -d extracted_edge_files
+
+
+
 10:10 PM, 7/7/2026
 I am thrilled to hear it is rendering perfectly!
 
@@ -121,3 +159,10 @@ unzip -l /mnt/d/eurooffice-blackbox/eurooffice-edge.zip | grep libicudata
 You will see it right there in the archive, perfectly preserved with all its symlinks intact!
 
 12:45 AM
+
+
+
+
+
+
+
