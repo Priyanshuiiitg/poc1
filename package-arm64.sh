@@ -21,6 +21,9 @@ cp -r /mnt/d/eurooffice-blackbox/extracted_edge_files/x2t-engine/sdkjs /tmp/edge
 cp -r /mnt/d/eurooffice-blackbox/extracted_edge_files/x2t-engine/dictionaries /tmp/edge-release-arm64/x2t-engine/
 cp -r /mnt/d/eurooffice-blackbox/extracted_edge_files/x2t-engine/web-apps /tmp/edge-release-arm64/x2t-engine/
 
+echo "Injecting 64-bit userspace runtime (lib64)..."
+cp -r /usr/aarch64-linux-gnu/lib /tmp/edge-release-arm64/x2t-engine/lib64
+
 echo "Compressing into eurooffice-edge-arm64.zip..."
 cd /tmp/edge-release-arm64
 zip -rq /mnt/d/eurooffice-blackbox/eurooffice-edge-arm64.zip .
