@@ -1,3 +1,7 @@
+
+adb shell 'echo "Model: $(getprop ro.product.model)"; echo "ABI: $(getprop ro.product.cpu.abi)"; echo "Supported ABIs: $(getprop ro.product.cpu.abilist)"; echo "Kernel: $(uname -m)"; echo "Android: $(getprop ro.build.version.release)"'
+
+
 # EuroOffice ARM64 Binary Extraction Process
 
 This document outlines the exact procedure we used to obtain the natively compiled 64-bit ARM (`aarch64`) binaries and shared libraries for the EuroOffice `x2t` engine. 
