@@ -1,0 +1,1 @@
+adb shell "echo Model: $(getprop ro.product.model); echo ABI: $(getprop ro.product.cpu.abi); echo Supported ABIs: $(getprop ro.product.cpu.abilist); echo Kernel: $(uname -m); echo Android: $(getprop ro.build.version.release)"
