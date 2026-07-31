@@ -1,1 +1,4 @@
 adb shell "echo Model: $(getprop ro.product.model); echo ABI: $(getprop ro.product.cpu.abi); echo Supported ABIs: $(getprop ro.product.cpu.abilist); echo Kernel: $(uname -m); echo Android: $(getprop ro.build.version.release)"
+
+
+export LD_LIBRARY_PATH=/lib/x2t-engine/server/FileConverter/bin:$LD_LIBRARY_PATH
